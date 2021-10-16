@@ -14,5 +14,5 @@ for ticker in requiredTickers:
         print(f'{ticker} directory already exists.')
     data['ticker'] = ticker  # add this column because the dataframe doesn't contain a column with the ticker
     # save to csv
-    data.to_csv('CSV_files/' + ticker + /price.csv')
+    data.to_csv('CSV_files/' + ticker + '/price.csv')
 
