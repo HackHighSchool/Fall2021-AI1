@@ -1,5 +1,4 @@
 import yfinance as yf
-import pandas as pd
 import os
 
 open_file = open("Russell1000Tickers.txt", "r")
