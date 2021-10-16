@@ -1,8 +1,9 @@
 import yfinance as yf
 import pandas as pd
 
-russellData = open('C:/Users/cjccl/PycharmProjects/Random Data/Russell1000Tickers.txt', 'r')
-companies = russellData.readlines()
+open_file = open("Russell1000Tickers.txt", "r")
+requiredTickers = open_file.read().split('\n')
+print(requiredTickers)
 
 df_list = list()
 for ticker in requiredTickers:
