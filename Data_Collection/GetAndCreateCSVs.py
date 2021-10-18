@@ -1,4 +1,3 @@
-
 import yfinance as yf
 import os
 
@@ -6,7 +5,7 @@ open_file = open("Russell1000Tickers.txt", "r")
 allTickers = open_file.read().split('\n')
 print(allTickers)
 
-for i in range(1, 1001):
+for i in range(0, 1024):
     TickerName = allTickers[i]
     print(TickerName)
     try:
