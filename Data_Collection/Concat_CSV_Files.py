@@ -3,7 +3,7 @@ import pandas as pd
 open_file = open("Russell1000Tickers.txt")
 tickers = open_file.read().split("\n")
 print(tickers)
-for i in range(0, 1):
+for i in range(0, 1024):
     ticker = tickers[i]
     csv1 = pd.read_csv(f"CSV_files/{ticker}/{ticker}_BalSheet.csv")
     csv2 = pd.read_csv(f"CSV_files/{ticker}/{ticker}_CashFlow.csv")
