@@ -13,12 +13,10 @@ for i in range(0, 1024):
 
     print("Read Files...")
     tickerGrouping = [csv1, csv2]
-    fileMake = open(f"CSV_files/{ticker}/{ticker}_BalSheet+CashFlow.csv", "w")
-    fileMake.write(pd.DataFrame.to_csv(pd.concat(tickerGrouping)))
-    fileMake.close()
+    currentDF = pd.concat(tickerGrouping)
+    currentDF.to_csv(f"CSV_files/{ticker}/{ticker}_BalSheet+CashFlow.csv", index=False)
     print("First Done...")
     tickerGrouping = [csv3, csv4]
-    fileMake = open(f"CSV_files/{ticker}/{ticker}_QuartBalSheet+QuartCashFlow.csv", "w")
-    fileMake.write(pd.DataFrame.to_csv(pd.concat(tickerGrouping)))
-    fileMake.close()
+    currentDF = pd.concat(tickerGrouping)
+    currentDF.to_csv(f"CSV_files/{ticker}/{ticker}_QuartBalSheet+QuartCashFlow.csv", index=False)
     print(f"Finished both files. Ticker finished: {ticker}")

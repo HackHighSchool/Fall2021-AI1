@@ -1,37 +1,37 @@
-,Unnamed: 0,2020-12-31,2019-12-31,2018-12-31
-0,Total Liab,87267000.0,22222000.0,12141000.0
-1,Total Stockholder Equity,-405473000.0,-219370000.0,-74111000.0
-2,Other Current Liab,50001000.0,8867000.0,513000.0
-3,Total Assets,346585000.0,96544000.0,119255000.0
-4,Common Stock,6000.0,6000.0,6000.0
-5,Other Current Assets,1536000.0,500000.0,3746000.0
-6,Retained Earnings,-405178000.0,-218718000.0,-73677000.0
-7,Other Liab,2402000.0,348000.0,857000.0
-8,Treasury Stock,-301000.0,-658000.0,-440000.0
-9,Other Assets,4986000.0,3787000.0,2701000.0
-10,Cash,310815000.0,63610000.0,98814000.0
-11,Total Current Liabilities,81098000.0,17295000.0,11284000.0
-12,Other Stockholder Equity,-301000.0,-658000.0,-440000.0
-13,Property Plant Equipment,22116000.0,22283000.0,12601000.0
-14,Total Current Assets,319483000.0,70474000.0,103953000.0
-15,Net Tangible Assets,-405473000.0,-219370000.0,-74111000.0
-16,Net Receivables,4852000.0,3850000.0,20000.0
-17,Accounts Payable,4542000.0,247000.0,108000.0
-18,Minority Interest,,-44000.0,-11000.0
-19,Short Term Investments,,,238000.0
-0,Change To Liabilities,4196000.0,139000.0,108000.0
-1,Total Cashflows From Investing Activities,-4412000.0,-10435000.0,41922000.0
-2,Net Borrowings,50406000.0,-469000.0,377000.0
-3,Total Cash From Financing Activities,356495000.0,51830000.0,91662000.0
-4,Change To Operating Activities,14150000.0,2070000.0,-484000.0
-5,Net Income,-177870000.0,-84840000.0,-45018000.0
-6,Change In Cash,248241000.0,-34704000.0,91335000.0
-7,Effect Of Exchange Rate,6000.0,234000.0,598000.0
-8,Total Cash From Operating Activities,-103848000.0,-76333000.0,-42847000.0
-9,Depreciation,7718000.0,5584000.0,2539000.0
-10,Other Cashflows From Investing Activities,8000.0,-8000.0,-8000.0
-11,Change To Account Receivables,-1004000.0,-116000.0,-116000.0
-12,Other Cashflows From Financing Activities,11943000.0,-200000.0,-3715000.0
-13,Change To Netincome,48962000.0,830000.0,8000.0
-14,Capital Expenditures,-4303000.0,-10328000.0,-10009000.0
-15,Investments,,,51922000.0
+Unnamed: 0,2020-12-31,2019-12-31,2018-12-31
+Total Liab,87267000.0,22222000.0,12141000.0
+Total Stockholder Equity,-405473000.0,-219370000.0,-74111000.0
+Other Current Liab,50001000.0,8867000.0,513000.0
+Total Assets,346585000.0,96544000.0,119255000.0
+Common Stock,6000.0,6000.0,6000.0
+Other Current Assets,1536000.0,500000.0,3746000.0
+Retained Earnings,-405178000.0,-218718000.0,-73677000.0
+Other Liab,2402000.0,348000.0,857000.0
+Treasury Stock,-301000.0,-658000.0,-440000.0
+Other Assets,4986000.0,3787000.0,2701000.0
+Cash,310815000.0,63610000.0,98814000.0
+Total Current Liabilities,81098000.0,17295000.0,11284000.0
+Other Stockholder Equity,-301000.0,-658000.0,-440000.0
+Property Plant Equipment,22116000.0,22283000.0,12601000.0
+Total Current Assets,319483000.0,70474000.0,103953000.0
+Net Tangible Assets,-405473000.0,-219370000.0,-74111000.0
+Net Receivables,4852000.0,3850000.0,20000.0
+Accounts Payable,4542000.0,247000.0,108000.0
+Minority Interest,,-44000.0,-11000.0
+Short Term Investments,,,238000.0
+Change To Liabilities,4196000.0,139000.0,108000.0
+Total Cashflows From Investing Activities,-4412000.0,-10435000.0,41922000.0
+Net Borrowings,50406000.0,-469000.0,377000.0
+Total Cash From Financing Activities,356495000.0,51830000.0,91662000.0
+Change To Operating Activities,14150000.0,2070000.0,-484000.0
+Net Income,-177870000.0,-84840000.0,-45018000.0
+Change In Cash,248241000.0,-34704000.0,91335000.0
+Effect Of Exchange Rate,6000.0,234000.0,598000.0
+Total Cash From Operating Activities,-103848000.0,-76333000.0,-42847000.0
+Depreciation,7718000.0,5584000.0,2539000.0
+Other Cashflows From Investing Activities,8000.0,-8000.0,-8000.0
+Change To Account Receivables,-1004000.0,-116000.0,-116000.0
+Other Cashflows From Financing Activities,11943000.0,-200000.0,-3715000.0
+Change To Netincome,48962000.0,830000.0,8000.0
+Capital Expenditures,-4303000.0,-10328000.0,-10009000.0
+Investments,,,51922000.0
