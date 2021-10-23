@@ -22,5 +22,7 @@ for i in range(0, 1024):
             print(f"{allTickers[i]}_Earnings.csv does not exist")
         if not os.path.exists(f"CSV_files/{allTickers[i]}/{allTickers[i]}_QuartEarnings.csv"):
             print(f"{allTickers[i]}_QuartEarnings.csv does not exist")
-# '''
+        if not os.path.exists(f"CSV_files/{allTickers[i]}/{allTickers[i]}_QuartEarnings.csv"):
+            print(f"{allTickers[i]}_price.csv does not exist")
+
 print("Finished!")
