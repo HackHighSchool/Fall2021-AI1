@@ -1,0 +1,14 @@
+Total Liab
+Total Stockholder Equity
+Total Assets
+Cash
+Total Current Liabilities
+Total Current Assets
+Net Tangible Assets
+Change To Liabilities
+Total Cashflows From Investing Activities
+Total Cash From Financing Activities
+Net Income
+Change In Cash
+Total Cash From Operating Activities
+Change To Netincome
