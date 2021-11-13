@@ -1,60 +1,61 @@
-import numpy as np
-from sklearn.svm import SVR
-import matplotlib.pyplot as plt
+#Import scikit-learn dataset library
+from sklearn import datasets
 
-# Generate sample data
-X = np.sort(5 * np.random.rand(40, 1), axis=0)
-y = np.sin(X).ravel()
+#Load dataset
+cancer = datasets.load_breast_cancer()
 
-# Add noise to targets
-y[::5] += 3 * (0.5 - np.random.rand(8))
+# print the names of the 13 features
+print("Features: ", cancer.feature_names)
 
-# Fit regression model
-svr_rbf = SVR(kernel="rbf", C=100, gamma=0.1, epsilon=0.1)
-svr_lin = SVR(kernel="linear", C=100, gamma="auto")
-svr_poly = SVR(kernel="poly", C=100, gamma="auto", degree=3, epsilon=0.1, coef0=1)
+# print the label type of cancer('malignant' 'benign')
+print("Labels: ", cancer.target_names)
 
-# Look at the results
-lw = 2
+Features:  ['mean radius' 'mean texture' 'mean perimeter' 'mean area'
+ 'mean smoothness' 'mean compactness' 'mean concavity'
+ 'mean concave points' 'mean symmetry' 'mean fractal dimension'
+ 'radius error' 'texture error' 'perimeter error' 'area error'
+ 'smoothness error' 'compactness error' 'concavity error'
+ 'concave points error' 'symmetry error' 'fractal dimension error'
+ 'worst radius' 'worst texture' 'worst perimeter' 'worst area'
+ 'worst smoothness' 'worst compactness' 'worst concavity'
+ 'worst concave points' 'worst symmetry' 'worst fractal dimension']
+Labels:  ['malignant' 'benign']
 
-svrs = [svr_rbf, svr_lin, svr_poly]
-kernel_label = ["RBF", "Linear", "Polynomial"]
-model_color = ["m", "c", "g"]
+# print data(feature)shape
+cancer.data.shape
 
-fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(15, 10), sharey=True)
-for ix, svr in enumerate(svrs):
-    axes[ix].plot(
-        X,
-        svr.fit(X, y).predict(X),
-        color=model_color[ix],
-        lw=lw,
-        label="{} model".format(kernel_label[ix]),
-    )
-    axes[ix].scatter(
-        X[svr.support_],
-        y[svr.support_],
-        facecolor="none",
-        edgecolor=model_color[ix],
-        s=50,
-        label="{} support vectors".format(kernel_label[ix]),
-    )
-    axes[ix].scatter(
-        X[np.setdiff1d(np.arange(len(X)), svr.support_)],
-        y[np.setdiff1d(np.arange(len(X)), svr.support_)],
-        facecolor="none",
-        edgecolor="k",
-        s=50,
-        label="other training data",
-    )
-    axes[ix].legend(
-        loc="upper center",
-        bbox_to_anchor=(0.5, 1.1),
-        ncol=1,
-        fancybox=True,
-        shadow=True,
-    )
+# print the cancer data features (top 5 records)
+print(cancer.data[0:5])
 
-fig.text(0.5, 0.04, "data", ha="center", va="center")
-fig.text(0.06, 0.5, "target", ha="center", va="center", rotation="vertical")
-fig.suptitle("Support Vector Regression", fontsize=14)
-plt.show()
+# print the cancer labels (0:malignant, 1:benign)
+print(cancer.target)
+
+# Import train_test_split function
+from sklearn.model_selection import train_test_split
+
+# Split dataset into training set and test set
+X_train, X_test, y_train, y_test = train_test_split(cancer.data, cancer.target, test_size=0.3,random_state=109) # 70% training and 30% test
+
+#Import svm model
+from sklearn import svm
+
+#Create a svm Classifier
+clf = svm.SVC(kernel='linear') # Linear Kernel
+
+#Train the model using the training sets
+clf.fit(X_train, y_train)
+
+#Predict the response for test dataset
+y_pred = clf.predict(X_test)
+
+#Import scikit-learn metrics module for accuracy calculation
+from sklearn import metrics
+
+# Model Accuracy: how often is the classifier correct?
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+
+# Model Precision: what percentage of positive tuples are labeled as such?
+print("Precision:",metrics.precision_score(y_test, y_pred))
+
+# Model Recall: what percentage of positive tuples are labelled as such?
+print("Recall:",metrics.recall_score(y_test, y_pred))
