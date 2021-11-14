@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 # Spacer
 
 def grab_date(date: str):
@@ -27,20 +28,28 @@ sheetTypeList = ("", "Quart")
 # ColumnsShared = list(pd.read_csv(f"CSV_files/A/A_BalSheet+CashFlow.csv").iloc[:, 0])
 # print(ColumnsShared)
 
-#  ALXN, ticker 32, has no data
+missingAdjReturn = set()
+
 for tick in range(0, 1024):
     ticker = tickerList[tick]
+    print(ticker)
     if ticker in emptyTickers:
         continue
+    try:
+        temp = pd.read_csv(f"CSV_files/{ticker}/{ticker}_adjustedreturn.csv")
+    except:
+        print(f"ticker {ticker} does not contain adjusted return")
+        missingAdjReturn.add(ticker)
+        continue
+    if ticker == "A":
+        continue
     for sheetType in sheetTypeList:
-        priceSheet = pd.read_csv(f"CSV_files/{ticker}/{ticker}_pricedepvar.csv", index_col=0)
-        # print(priceSheet)
+        priceSheet = pd.read_csv(f"CSV_files/{ticker}/{ticker}_adjustedreturn.csv", index_col=0)
+            #print(f"ticker {ticker} does not contain adjusted return")
+            #missingAdjReturn.append(ticker)
+            #continue
         df1 = pd.read_csv(f"CSV_files/{ticker}/{ticker}_{sheetType}BalSheet+{sheetType}CashFlow.csv", index_col=0)
-        # print(df1)
-        # if tick != 0:
-        #     for indexName in ColumnsShared:
-        #         if indexName not in list(df1.iloc[:, 0]):
-        #             ColumnsShared.remove(indexName)
+
         df1 = df1.transpose()
         for i in range(0, len(priceSheet)):
             grab_date(df1.index[-1])
@@ -71,7 +80,9 @@ for tick in range(0, 1024):
             else:
                 print(f'Ticker finished: {ticker}:{tick}. type:{sheetType}')
             dfFinal.to_csv(f"CSV_files/{ticker}/{ticker}_{sheetType}CombinedFiles.csv")
-# open_file = open("Shared_Columns.txt", "w")
-# print(ColumnsShared)
-# for i in ColumnsShared:
-#     open_file.write(i + "\n")
+
+open_file = open("missingAdjReturn.txt", "w")
+print(missingAdjReturn)
+for i in missingAdjReturn:
+    open_file.write(i + "\n")
+open_file.close()
