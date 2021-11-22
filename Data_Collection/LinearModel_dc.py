@@ -1,38 +1,76 @@
 import pandas as pd
 import numpy as np
-
+import csv
 
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import cross_val_score
 
-#change for different tickers
-TickerName ="AA"
+open_file = open("Russell1000Tickers.txt", "r")
+allTickers = open_file.read().split('\n')
 
-data_file = "CSV_files/" + str(TickerName) + "/" + str(TickerName)+"_adjustedreturn.csv"
-data = pd.read_csv(data_file)
+results =[]
+
+for t in range(0, 250):
+    try:
+        TickerName = allTickers[t]
+
+        data_file = "CSV_files/" + str(TickerName) + "/" + str(TickerName)+"_CombinedFiles.csv"
+        data = pd.read_csv(data_file)
+
+        data = data.dropna()
 
 #22 is replaced with the value that we are trying to predict so 22, 66, 132
-y = data.AdjRet22Day
-columns = ["Open","High", "Low", "Close", "Adj Close"]
-X = data[columns]
-train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 1)
+        y = data.AdjRet22Day
+        columns = list(data.columns)
+        remove = ["ticker", "Date", "PriceReturn_22days", "PriceReturn_66days", "PriceReturn_132days", "PriceReturn_22days_mean","AdjRet22Day", "AdjRet66Day","AdjRet132Day"]
+        for i in remove:
+            columns.remove(i)
+#use columns.txt later
+        X = data[columns]
 
-model = linear_model.LinearRegression()
-model.fit(train_X,train_y)
+        train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 1)
 
-predictions = model.predict(val_X)
-print(predictions)
-print(val_y)
+        model = linear_model.LinearRegression()
+        model.fit(train_X,train_y)
 
-#Mean Absolute Error
-mae = mean_absolute_error(val_y, predictions)
-print("Mean Absolute Error: " + str(mae))
+        predictions = model.predict(val_X)
+        #print(predictions)
+        #print(val_y)
 
-#Root Mean Square Deviation
-def rmse_cv(Model):
-    rmse= np.sqrt(-cross_val_score(Model, train_X, train_y, scoring="neg_mean_squared_error", cv = 5))
-    return(rmse)
+        #Hit Rate Validation
+        hitrate = 0
+        indexes = val_y.index.values
+        index_list = list(indexes)
+        #print(index_list)
+        n = 0
+        for x in predictions:
+            #print(x)
+            index = index_list[n]
+            #print(val_y[index])
+            if x < 0 and val_y[index] < 0:
+                hitrate += 1
+                n += 1
+            elif x > 0 and val_y[index]> 0:
+                hitrate += 1
+                n += 1
+            else:
+                n += 1
 
-print("Root Mean Square Error: " + str(rmse_cv(model).mean()))
+        hitrate = hitrate/len(index_list)
+        #print("Hit Rate: " + str(hitrate))
+
+        results.append([str(TickerName), str(hitrate)])
+        #print(results)
+
+    except:
+        print("Could not find file for "+ allTickers[t])
+
+#creating CSV to store data
+header = ["Ticker", "Hit Rate"]
+
+with open("LinearHitRates_dc", "w", encoding="UTF8") as f:
+    writer = csv.writer(f)
+    writer.writerow(header)
+    writer.writerows(results)
