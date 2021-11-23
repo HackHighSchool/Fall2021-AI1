@@ -3,34 +3,77 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets, linear_model, metrics
 import statsmodels.api as sm
+from scipy import stats
+import glob
+
+open_file = open("Russell1000Tickers.txt", "r")
+requiredTickers = open_file.read().split('\n')
+
+open_file = open("EmptyTickers.txt", "r")
+emptyTickers = open_file.read().split('\n')
+
+open_file = open("Shared_Columns.txt", "r")
+sharedColumns = open_file.read().split('\n')
 
 # load dataset
-df = pd.read_csv('C:\\ProgramData\\cjccl\\GitHubDesktop\\app-2.9.4\\Fall2021-AI1\\Data_Collection\\CSV_files\\AMZN\\AMZN_CombinedFiles.csv')
+base_dir = "C:/ProgramData/cjccl/GitHubDesktop/app-2.9.4/Fall2021-AI1/Data_Collection/CSV_files"
+all_files = []
+for ticker in requiredTickers:
+    if ticker not in emptyTickers:
+        all_files.append(base_dir + f'/{ticker}/{ticker}_CombinedFiles.csv')
 
-#print(df.to_string())
+first = True
 
-#df = pd.DataFrame(dataframe, columns=['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume', 'ticker', 'PriceReturn'])
+totalDf = []
 
-X = df[['AdjRet22Day']]
-Y = df['PriceReturn_22days']
+for file in all_files[:250]:
+    df = pd.read_csv(file, index_col=None, header=0)
+    #print(file)
 
-# splitting X and y into training and testing sets
+    if first:
+        totalDf = df
+        first = False
+    else:
+        totalDf = totalDf.append(df)
+currDf = totalDf
+for column in totalDf:
+   if column not in sharedColumns:
+       #print(column)
+       currDf = currDf.drop(column, axis = 1)
+   else:
+       totalDf = totalDf.dropna(subset=[column])
+
+currDf = currDf.dropna()
+
+X = pd.DataFrame(stats.zscore(currDf,axis=0),columns=currDf.columns)
+y = totalDf['AdjRet22Day']
+#splitting X and Y into training and testing sets
 from sklearn.model_selection import train_test_split
 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size= 0.1,
-                                                    random_state=1)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state=42)
 
 # create linear regression object
 reg = linear_model.LinearRegression()
 
 # train the model using the training sets
-reg.fit(X_train, Y_train)
+reg.fit(X_train, y_train)
 
-# regression coefficients
-print('Coefficients: ', reg.coef_)
+print('Train Score: ', reg.score(X_train, y_train))
+print('Test Score: ', reg.score(X_test, y_test))
 
-# variance score: 1 means perfect prediction
-print('Variance score: {}'.format(reg.score(X_test, Y_test)))
+print('Intercept: \n', reg.intercept_)
+print('Coefficients: \n', reg.coef_)
+
+# OLS Method
+X = sm.add_constant(X)  # adding a constant
+
+model = sm.OLS(y, X).fit()
+predictions = model.predict(X)
+
+print_model = model.summary()
+print(print_model)
+
+print('Variance score: {}'.format(reg.score(X_test, y_test)))
 
 # plot for residual error
 
@@ -38,15 +81,15 @@ print('Variance score: {}'.format(reg.score(X_test, Y_test)))
 plt.style.use('fivethirtyeight')
 
 ## plotting residual errors in training data
-plt.scatter(reg.predict(X_train), reg.predict(X_train) - Y_train,
+plt.scatter(reg.predict(X_train), reg.predict(X_train) - y_train,
             color="green", s=1, label='Train data')
 
 ## plotting residual errors in test data
-plt.scatter(reg.predict(X_test), reg.predict(X_test) - Y_test,
-            color="blue", s=1, label='Test data')
+plt.scatter(reg.predict(X_test), reg.predict(X_test) - y_test,
+            color="blue", s=0.01, label='Test data')
 
 ## plotting line for zero residual error
-plt.hlines(y=0, xmin=0, xmax=2, linewidth=2)
+plt.hlines(y=0, xmin=-0.2, xmax=0.2, linewidth=0.1)
 
 ## plotting legend
 plt.legend(loc='upper right')
@@ -55,19 +98,5 @@ plt.legend(loc='upper right')
 plt.title("Residual errors")
 
 ## method call for showing the plot
-#plt.show()
+plt.show()
 
-
-print('Train Score: ', reg.score(X_train, Y_train))
-print('Test Score: ', reg.score(X_test, Y_test))
-
-print('Intercept: \n', reg.intercept_)
-print('Coefficients: \n', reg.coef_)
-
-X = sm.add_constant(X)  # adding a constant
-
-model = sm.OLS(Y, X).fit()
-predictions = model.predict(X)
-
-print_model = model.summary()
-print(print_model)
