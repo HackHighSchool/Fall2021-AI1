@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-open_file = open("Russell1000Tickers.txt")
+open_file = open("../Assisting_files/Russell1000Tickers.txt")
 tickers = open_file.read().splitlines()
 open_file.close()
 types = ("", "Quart")
@@ -14,7 +14,7 @@ for ticker in tickers:
             emptyTickers.append(ticker)
             print(ticker)
             break
-open_file = open("EmptyTickers.txt", "w")
+open_file = open("../Assisting_files/EmptyTickers.txt", "w")
 for i in emptyTickers:
     open_file.write(i + "\n")
 open_file.close()

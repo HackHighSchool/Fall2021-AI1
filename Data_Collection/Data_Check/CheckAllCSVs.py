@@ -1,7 +1,7 @@
 
 import os
 
-open_file = open("Russell1000Tickers.txt", "r")
+open_file = open("../Assisting_files/Russell1000Tickers.txt", "r")
 allTickers = open_file.read().split('\n')
 print(len(allTickers))
 

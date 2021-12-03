@@ -1,6 +1,6 @@
 import pandas as pd
 #import numpy as np
-open_file = open("Russell1000Tickers.txt")
+open_file = open("../Assisting_files/Russell1000Tickers.txt")
 tickers = open_file.read().split("\n")
 print(tickers)
 for i in range(0, 1024):

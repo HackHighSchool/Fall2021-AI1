@@ -70,7 +70,7 @@ for t in range(0, 250):
 #creating CSV to store data
 header = ["Ticker", "Hit Rate"]
 
-with open("LassoHitRates_dc", "w", encoding="UTF8") as f:
+with open("Hit rates/LassoHitRates_dc", "w", encoding="UTF8") as f:
     writer = csv.writer(f)
     writer.writerow(header)
     writer.writerows(results)

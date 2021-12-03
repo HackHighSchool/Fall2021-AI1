@@ -14,10 +14,10 @@ def grab_date(date: str):
     dateComb = year + month + day
 
 
-open_file = open("Russell1000Tickers.txt")
+open_file = open("../Assisting_files/Russell1000Tickers.txt")
 tickerList = open_file.read().splitlines()
 open_file.close()
-open_file = open("EmptyTickers.txt")
+open_file = open("../Assisting_files/EmptyTickers.txt")
 emptyTickers = open_file.read().splitlines()
 open_file.close()
 year: str = ''
@@ -33,21 +33,15 @@ missingAdjReturn = set()
 for tick in range(0, 1024):
     ticker = tickerList[tick]
     print(ticker)
-    if ticker in emptyTickers:
-        continue
-    try:
-        temp = pd.read_csv(f"CSV_files/{ticker}/{ticker}_adjustedreturn.csv")
-    except:
-        print(f"ticker {ticker} does not contain adjusted return")
-        missingAdjReturn.add(ticker)
-        continue
-    if ticker == "A":
-        continue
+    if ticker in emptyTickers: continue
+    # try:
+    temp = pd.read_csv(f"CSV_files/{ticker}/{ticker}_adjustedreturn.csv")
+    # except:
+    #     print(f"ticker {ticker} does not contain adjusted return")
+    #     missingAdjReturn.add(ticker)
+    #     continue
     for sheetType in sheetTypeList:
         priceSheet = pd.read_csv(f"CSV_files/{ticker}/{ticker}_adjustedreturn.csv", index_col=0)
-            #print(f"ticker {ticker} does not contain adjusted return")
-            #missingAdjReturn.append(ticker)
-            #continue
         df1 = pd.read_csv(f"CSV_files/{ticker}/{ticker}_{sheetType}BalSheet+{sheetType}CashFlow.csv", index_col=0)
 
         df1 = df1.transpose()
@@ -81,8 +75,8 @@ for tick in range(0, 1024):
                 print(f'Ticker finished: {ticker}:{tick}. type:{sheetType}')
             dfFinal.to_csv(f"CSV_files/{ticker}/{ticker}_{sheetType}CombinedFiles.csv")
 
-open_file = open("missingAdjReturn.txt", "w")
-print(missingAdjReturn)
-for i in missingAdjReturn:
-    open_file.write(i + "\n")
-open_file.close()
+# open_file = open("missingAdjReturn.txt", "w")
+# print(missingAdjReturn)
+# for i in missingAdjReturn:
+#     open_file.write(i + "\n")
+# open_file.close()
