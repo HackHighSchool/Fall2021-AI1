@@ -1,37 +1,66 @@
 import pandas as pd
-import numpy as np
+from scipy import stats
 
-from sklearn import svm
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import cross_val_score
+from sklearn import svm
 
-#change for different tickers
-TickerName ="AA"
+open_file = open("../Assisting_files/Russell1000Tickers.txt", "r")
+allTickers = open_file.read().split('\n')
 
-data_file = "CSV_files/" + str(TickerName) + "/" + str(TickerName)+"_adjustedreturn.csv"
-data = pd.read_csv(data_file)
+commonColumns = ["Close","Total Liab", "Total Stockholder Equity", "Total Assets", "Cash", "Total Current Liabilities", "Total Current Assets", "Net Tangible Assets", "Change To Liabilities", "Total Cashflows From Investing Activities", "Total Cash From Financing Activities", "Net Income", "Change In Cash", "Total Cash From Operating Activities", "Change To Netincome"]
+first = True
 
-#22 is replaced with the value that we are trying to predict so 22, 66, 132
-y = data.AdjRet22Day
-columns = ["Open","High", "Low", "Close", "Adj Close"]
-X = data[columns]
-train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 1)
+results =[]
 
-model = svm.SVC(kernel="linear")
+for t in range(0, 1024):
+    try:
+        TickerName = allTickers[t]
+
+        data_file = "../CSV_files/" + str(TickerName) + "/" + str(TickerName)+"_CombinedFiles.csv"
+        data = pd.read_csv(data_file)
+        data = data[commonColumns + ["AdjRet132Day"]]
+        data = data.dropna(axis=0)
+
+        data = data.sample(frac=.10)
+
+        print(t)
+        y = data.AdjRet132Day > 0
+
+        X = data[commonColumns]
+        if first:
+            combinedX = X
+            combinedy = y
+            first = False
+        else:
+            combinedX = combinedX.append(X)
+            combinedy = combinedy.append(y)
+
+    except:
+        print("Could not find file for "+ allTickers[t] + " or there was a column of missing values")
+
+combinedX = pd.DataFrame(stats.zscore(combinedX,axis=0),columns=combinedX.columns)
+
+train_X, val_X, train_y, val_y = train_test_split(combinedX, combinedy)
+
+model = svm.SVC(kernel="linear",verbose=True)
 model.fit(train_X, train_y)
 
 predictions = model.predict(val_X)
-print(predictions)
-print(val_y)
+#Hit Rate Validation
+hitrate = 0
+indexes = val_y.index.values
+index_list = list(indexes)
 
-#Mean Absolute Error
-mae = mean_absolute_error(val_y, predictions)
-print("Mean Absolute Error: " + str(mae))
+n = 0
+for x in predictions:
+    if x == 0 and val_y.iloc[n] == 0:
+        hitrate += 1
+        n += 1
+    elif x != 0 and val_y.iloc[n]!=0:
+        hitrate += 1
+        n += 1
+    else:
+        n += 1
 
-#Root Mean Square Deviation
-def rmse_cv(Model):
-    rmse= np.sqrt(-cross_val_score(Model, train_X, train_y, scoring="neg_mean_squared_error", cv = 5))
-    return(rmse)
-
-print("Root Mean Square Error: " + str(rmse_cv(model).mean()))
+hitrate = hitrate/(len(index_list)+0.0)
+print("Hit Rate: " + str(hitrate))

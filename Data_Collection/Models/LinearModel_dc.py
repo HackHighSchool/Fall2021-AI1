@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 open_file = open("../Assisting_files/Russell1000Tickers.txt", "r")
 allTickers = open_file.read().split('\n')
 
-commonColumns = ["Total Liab", "Total Stockholder Equity", "Total Assets", "Cash", "Total Current Liabilities", "Total Current Assets", "Net Tangible Assets", "Change To Liabilities", "Total Cashflows From Investing Activities", "Total Cash From Financing Activities", "Net Income", "Change In Cash", "Total Cash From Operating Activities", "Change To Netincome"]
+commonColumns = ["Close","Total Liab", "Total Stockholder Equity", "Total Assets", "Cash", "Total Current Liabilities", "Total Current Assets", "Net Tangible Assets", "Change To Liabilities", "Total Cashflows From Investing Activities", "Total Cash From Financing Activities", "Net Income", "Change In Cash", "Total Cash From Operating Activities", "Change To Netincome"]
 first = True
 
 results =[]
@@ -18,11 +18,11 @@ for t in range(0, 1024):
 
         data_file = "../CSV_files/" + str(TickerName) + "/" + str(TickerName)+"_CombinedFiles.csv"
         data = pd.read_csv(data_file)
-        data = data[commonColumns + ["AdjRet22Day"]]
+        data = data[commonColumns + ["AdjRet132Day"]]
         data = data.dropna(axis=0)
 
         print(t)
-        y = data.AdjRet22Day
+        y = data.AdjRet132Day
 
         X = data[commonColumns]
         if first:
@@ -49,7 +49,7 @@ predictions = model.predict(val_X)
 hitrate = 0
 indexes = val_y.index.values
 index_list = list(indexes)
-print(index_list)
+
 n = 0
 for x in predictions:
     if x < 0 and val_y.iloc[n] < 0:
@@ -61,5 +61,5 @@ for x in predictions:
     else:
         n += 1
 
-hitrate = hitrate/len(index_list)
+hitrate = hitrate/(len(index_list)+0.0)
 print("Hit Rate: " + str(hitrate))
