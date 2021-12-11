@@ -3,6 +3,7 @@ from scipy import stats
 
 from sklearn.model_selection import train_test_split
 from sklearn import svm
+import numpy as np
 
 open_file = open("../Assisting_files/Russell1000Tickers.txt", "r")
 allTickers = open_file.read().split('\n')
@@ -21,19 +22,21 @@ for t in range(0, 1024):
         data = data[commonColumns + ["AdjRet132Day"]]
         data = data.dropna(axis=0)
 
-        data = data.sample(frac=.10)
+        data = data.sample(frac=.05)
 
         print(t)
         y = data.AdjRet132Day > 0
-
+        realY = data.AdjRet132Day
         X = data[commonColumns]
         if first:
             combinedX = X
             combinedy = y
+            realCombinedY = realY
             first = False
         else:
             combinedX = combinedX.append(X)
             combinedy = combinedy.append(y)
+            realCombinedY = realCombinedY.append(realY)
 
     except:
         print("Could not find file for "+ allTickers[t] + " or there was a column of missing values")
@@ -42,7 +45,7 @@ combinedX = pd.DataFrame(stats.zscore(combinedX,axis=0),columns=combinedX.column
 
 train_X, val_X, train_y, val_y = train_test_split(combinedX, combinedy)
 
-model = svm.SVC(kernel="linear",verbose=True)
+model = svm.SVC(kernel="rbf",verbose=True)
 model.fit(train_X, train_y)
 
 predictions = model.predict(val_X)
@@ -63,4 +66,30 @@ for x in predictions:
         n += 1
 
 hitrate = hitrate/(len(index_list)+0.0)
-print("Hit Rate: " + str(hitrate))
+print("Total Hit Rate: " + str(hitrate))
+
+hitrate = 0
+indexes = val_y.index.values
+index_list = list(indexes)
+
+n = 0
+for x in predictions:
+    if x != 0 and val_y.iloc[n]!=0:
+        hitrate += 1
+        n += 1
+    else:
+        n += 1
+
+hitrate = hitrate/(sum(val_y==True)+0.0)
+print("Buy Hit Rate: " + str(hitrate))
+
+
+randomIndexList = [x*5 for x in range(len(combinedX)/5)]
+subsetX = combinedX.iloc[randomIndexList]
+subsetY =realCombinedY.iloc[randomIndexList]
+predictions2 = model.predict(subsetX)
+
+print('Mean Company Return: ' + str(np.mean(subsetY)))
+print('Median Company Return: ' + str(np.median(subsetY)))
+print('Mean Buy Company Return: ' + str(np.mean(subsetY[predictions2==True])))
+print('Median Buy Company Return: ' + str(np.median(subsetY[predictions2==True])))
