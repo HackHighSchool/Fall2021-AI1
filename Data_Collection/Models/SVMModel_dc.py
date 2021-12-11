@@ -47,7 +47,7 @@ train_X, val_X, train_y, val_y = train_test_split(combinedX, combinedy)
 
 gammas = [0.1, 1, 10, 100, 1000]
 for gamma in gammas:
-    model = svm.SVC(kernel="rbf",verbose=True, gamma=gamma)
+    model = svm.SVC(kernel="rbf",gamma=gamma)
     model.fit(train_X, train_y)
 
     predictions = model.predict(val_X)
@@ -68,7 +68,7 @@ for gamma in gammas:
             n += 1
 
     hitrate = hitrate/(len(index_list)+0.0)
-    print("Gamma: " + str(gamma))
+    print("\n\n\n\n\n\n\nGamma: " + str(gamma))
     print("Total Hit Rate: " + str(hitrate))
 
     hitrate = 0
@@ -96,3 +96,4 @@ for gamma in gammas:
     print('Median Company Return: ' + str(np.median(subsetY)))
     print('Mean Buy Company Return: ' + str(np.mean(subsetY[predictions2==True])))
     print('Median Buy Company Return: ' + str(np.median(subsetY[predictions2==True])))
+    print('Number of Companies recommended to buy: ' + sum(predictions2==True))
