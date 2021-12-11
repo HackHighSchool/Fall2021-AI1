@@ -96,4 +96,4 @@ for gamma in gammas:
     print('Median Company Return: ' + str(np.median(subsetY)))
     print('Mean Buy Company Return: ' + str(np.mean(subsetY[predictions2==True])))
     print('Median Buy Company Return: ' + str(np.median(subsetY[predictions2==True])))
-    print('Number of Companies recommended to buy: ' + sum(predictions2==True))
+    print('Number of Companies recommended to buy: ' + str(sum(predictions2==True)))
