@@ -45,51 +45,54 @@ combinedX = pd.DataFrame(stats.zscore(combinedX,axis=0),columns=combinedX.column
 
 train_X, val_X, train_y, val_y = train_test_split(combinedX, combinedy)
 
-model = svm.SVC(kernel="rbf",verbose=True)
-model.fit(train_X, train_y)
+gammas = [0.1, 1, 10, 100, 1000]
+for gamma in gammas:
+    model = svm.SVC(kernel="rbf",verbose=True, gamma=gamma)
+    model.fit(train_X, train_y)
 
-predictions = model.predict(val_X)
-#Hit Rate Validation
-hitrate = 0
-indexes = val_y.index.values
-index_list = list(indexes)
+    predictions = model.predict(val_X)
+    #Hit Rate Validation
+    hitrate = 0
+    indexes = val_y.index.values
+    index_list = list(indexes)
 
-n = 0
-for x in predictions:
-    if x == 0 and val_y.iloc[n] == 0:
-        hitrate += 1
-        n += 1
-    elif x != 0 and val_y.iloc[n]!=0:
-        hitrate += 1
-        n += 1
-    else:
-        n += 1
+    n = 0
+    for x in predictions:
+        if x == 0 and val_y.iloc[n] == 0:
+            hitrate += 1
+            n += 1
+        elif x != 0 and val_y.iloc[n]!=0:
+            hitrate += 1
+            n += 1
+        else:
+            n += 1
 
-hitrate = hitrate/(len(index_list)+0.0)
-print("Total Hit Rate: " + str(hitrate))
+    hitrate = hitrate/(len(index_list)+0.0)
+    print("Gamma: " + str(gamma))
+    print("Total Hit Rate: " + str(hitrate))
 
-hitrate = 0
-indexes = val_y.index.values
-index_list = list(indexes)
+    hitrate = 0
+    indexes = val_y.index.values
+    index_list = list(indexes)
 
-n = 0
-for x in predictions:
-    if x != 0 and val_y.iloc[n]!=0:
-        hitrate += 1
-        n += 1
-    else:
-        n += 1
+    n = 0
+    for x in predictions:
+        if x != 0 and val_y.iloc[n]!=0:
+            hitrate += 1
+            n += 1
+        else:
+            n += 1
 
-hitrate = hitrate/(sum(val_y==True)+0.0)
-print("Buy Hit Rate: " + str(hitrate))
+    hitrate = hitrate/(sum(val_y==True)+0.0)
+    print("Buy Hit Rate: " + str(hitrate))
 
 
-randomIndexList = [x*5 for x in range(len(combinedX)/5)]
-subsetX = combinedX.iloc[randomIndexList]
-subsetY =realCombinedY.iloc[randomIndexList]
-predictions2 = model.predict(subsetX)
+    randomIndexList = [x*5 for x in range(len(combinedX)/5)]
+    subsetX = combinedX.iloc[randomIndexList]
+    subsetY =realCombinedY.iloc[randomIndexList]
+    predictions2 = model.predict(subsetX)
 
-print('Mean Company Return: ' + str(np.mean(subsetY)))
-print('Median Company Return: ' + str(np.median(subsetY)))
-print('Mean Buy Company Return: ' + str(np.mean(subsetY[predictions2==True])))
-print('Median Buy Company Return: ' + str(np.median(subsetY[predictions2==True])))
+    print('Mean Company Return: ' + str(np.mean(subsetY)))
+    print('Median Company Return: ' + str(np.median(subsetY)))
+    print('Mean Buy Company Return: ' + str(np.mean(subsetY[predictions2==True])))
+    print('Median Buy Company Return: ' + str(np.median(subsetY[predictions2==True])))
